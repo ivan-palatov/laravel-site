@@ -32,7 +32,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('file', 'File:') !!}
+        {!! Form::label('file', 'Photo:') !!}
         {!! Form::file('file', null, ['class'=>'form-control']) !!}
     </div>
     
