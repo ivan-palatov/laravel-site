@@ -8,7 +8,14 @@
     </div>
 
     <div class="col-sm-9">
+        {{-- Delete user button --}}
+        {!! Form::open(['method'=>'DELETE', 'action'=>['AdminUsersController@destroy', $user->id]]) !!}
+        <div class="form-group">
+            {!! Form::submit('Delete User', ['class'=>'btn btn-danger']) !!}
+        </div>
+        {!! Form::close() !!}
 
+        {{-- Edit user form --}}
         {!! Form::model($user, ['method'=>'PATCH', 'action'=>['AdminUsersController@update', $user->id], 'files'=>true]) !!}
         <div class="form-group">
             {!! Form::label('name', 'Name:') !!}
@@ -50,6 +57,7 @@
         </div>
 
         {!! Form::close() !!}
+        
 
         @include('admin.error')
 

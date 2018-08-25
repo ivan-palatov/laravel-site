@@ -1,6 +1,13 @@
 @extends('layouts.admin')
 
 @section('content')
+    @if (Session::has('notification'))
+        <div class="alert alert-success alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            {{ session('notification') }}
+        </div>
+    @endif
+
     <h1>Users</h1>
     
     <table class="table">

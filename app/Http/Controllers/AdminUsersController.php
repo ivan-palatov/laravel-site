@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UsersEditRequest;
@@ -60,6 +61,8 @@ class AdminUsersController extends Controller
         $input['password'] = bcrypt($request->password);
 
         User::create($input);
+        // Send notification
+        Session::flash('notification', 'The user has been created');
 
         return redirect('admin/users');
         // return $request->all();
@@ -109,13 +112,21 @@ class AdminUsersController extends Controller
             $photo = Photo::create(['file'=>$name]);
             // Adding id of photo to inputs
             $input['photo_id'] = $photo->id;
+            // Removing the old image if existed
+            if ($user->photo) {
+                unlink(public_path() . '/images/' . $user->photo->file);
+            }
         }
+        // Password check
         if ($request->password)
             $input['password'] = bcrypt($request->password);
         else
             $input['password'] = $user->password;
 
+        // Save edited user to db
         $user->update($input);
+        // Send notification
+        Session::flash('notification', 'The user has been updated');
 
         return redirect('admin/users');
     }
@@ -128,6 +139,15 @@ class AdminUsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        if ($user->photo) {
+            unlink(public_path() . "/images/" . $user->photo->file); //removes image
+        }
+        // deleting user
+        $user->delete();
+        // Make notification
+        Session::flash('notification', 'The user has been deleted');
+
+        return redirect('admin/users');
     }
 }
