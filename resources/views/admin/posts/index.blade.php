@@ -9,7 +9,7 @@
                 <th>Image</th>
                 <th>Title</th>
                 <th>User</th>
-                <th>Category ID</th>
+                <th>Category</th>
                 <th>Created</th>
                 <th>Updated</th>
             </tr>
@@ -27,7 +27,7 @@
                         </td>
                         <td><a href="{{ route('posts.edit', $post->id) }}">{{ $post->title }}</a></td>
                         <td>{{ $post->user->name }}</td>
-                        <td>{{ $post->category_id }}</td>
+                        <td>{{ $post->category_id ? $post->category->name : 'None' }}</td>
                         <td>{{ $post->created_at->diffForHumans() }}</td>
                         <td>{{ $post->updated_at->diffForHumans() }}</td>
                     </tr>
