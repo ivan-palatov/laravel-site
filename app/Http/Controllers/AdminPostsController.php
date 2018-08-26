@@ -8,6 +8,7 @@ use App\Http\Requests\PostsCreateRequest;
 use App\Post;
 use App\Photo;
 use App\Category;
+use Illuminate\Support\Facades\Session;
 
 class AdminPostsController extends Controller
 {
@@ -56,6 +57,8 @@ class AdminPostsController extends Controller
 
         $user->posts()->create($input);
 
+        Session::flash('notification', 'Post was successfuly created.');
+
         return redirect('/admin/posts');
     }
 
@@ -78,7 +81,10 @@ class AdminPostsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $categories = Category::pluck('name', 'id')->all();
+
+        return view('admin.posts.edit', compact('post', 'categories'));
     }
 
     /**
@@ -88,9 +94,29 @@ class AdminPostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostsCreateRequest $request, $id)
     {
-        //
+        $input = $request->all();
+        $post = Post::findOrFail($id);
+
+        if ($image = $request->file('image')) {
+            $name = time() . $image->getClientOriginalName();
+
+            $image->move('images', $name);
+
+            $photo = Photo::create(['file'=>$name]);
+            $input['photo_id'] = $photo->id;
+            
+            if ($post->photo_id) {
+                unlink(public_path() . '/images/' . $post->photo->file);
+            }
+        }
+
+        $post->update($input);
+
+        Session::flash('notification', 'Post was successfuly updated.');
+
+        return redirect('/admin/posts');
     }
 
     /**
@@ -101,6 +127,14 @@ class AdminPostsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::findOrFail($id);
+        if ($post->photo_id) {
+            unlink(public_path() . '/images/' . $post->photo->file);
+        }
+        $post->delete();
+
+        Session::flash('notification', 'Post was successfuly deleted.');
+
+        return redirect('/admin/posts');
     }
 }
