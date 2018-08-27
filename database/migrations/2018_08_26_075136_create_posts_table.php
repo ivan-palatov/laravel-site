@@ -16,12 +16,16 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index();
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->integer('category_id')->unsigned()->index()->nullable();
+            $table->integer('category_id')->unsigned()->nullable()->index();
             $table->integer('photo_id')->unsigned()->nullable()->index();
             $table->string('title');
             $table->text('body');
             $table->timestamps();
+
+            
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
+            $table->foreign('photo_id')->references('id')->on('photos')->onDelete('set null');
         });
     }
 
