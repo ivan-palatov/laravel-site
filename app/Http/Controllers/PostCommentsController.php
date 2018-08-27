@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Comment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class PostCommentsController extends Controller
 {
@@ -13,7 +16,7 @@ class PostCommentsController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.comments.index');
     }
 
     /**
@@ -34,7 +37,21 @@ class PostCommentsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $data = [
+            'post_id' => $request->post_id,
+            'body' => $request->body,
+            'author' => $user->name,
+            'email' => $user->email,
+            'photo' => $user->photo_id ? $user->photo->file : 'default.png'
+        ];
+
+        Comment::create($data);
+
+        Session::flash('notification', 'Comment was successfuly created.');
+
+        return redirect('/post/' . $request->post_id);
     }
 
     /**
