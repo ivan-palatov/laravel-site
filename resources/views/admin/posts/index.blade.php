@@ -18,8 +18,9 @@
                 <th>User</th>
                 <th>Category</th>
                 <th>Body</th>
+                <th>Post Link</th>
+                <th>Comments</th>
                 <th>Created</th>
-                <th>Updated</th>
             </tr>
         </thead>
         <tbody>
@@ -37,8 +38,9 @@
                         <td>{{ $post->user->name }}</td>
                         <td>{{ $post->category_id ? $post->category->name : 'None' }}</td>
                         <td>{{ str_limit($post->body, 20) }}</td>
+                        <td><a href="{{ route('home.post', $post->id) }}">View Post</a></td>
+                        <td><a href="{{ route('comments.show', $post->id) }}">View Comments</a></td>
                         <td>{{ $post->created_at->diffForHumans() }}</td>
-                        <td>{{ $post->updated_at->diffForHumans() }}</td>
                     </tr>
                 @endforeach
             @endif

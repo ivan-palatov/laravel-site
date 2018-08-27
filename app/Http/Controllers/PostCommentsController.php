@@ -63,7 +63,9 @@ class PostCommentsController extends Controller
      */
     public function show($id)
     {
-        //
+        $comments = Comment::wherePostId($id)->get();
+
+        return view('admin.comments.show', compact('comments'));
     }
 
     /**
@@ -90,7 +92,7 @@ class PostCommentsController extends Controller
 
         Session::flash('notification', 'Comment state has been successfuly switched.');
 
-        return redirect('admin/comments');
+        return redirect()->back();
     }
 
     /**
@@ -105,6 +107,6 @@ class PostCommentsController extends Controller
 
         Session::flash('notification', 'Comment was successfuly deleted.');
 
-        return redirect('admin/comments');
+        return redirect()->back();
     }
 }

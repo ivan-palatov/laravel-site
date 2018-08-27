@@ -9,6 +9,7 @@ use App\Post;
 use App\Photo;
 use App\Category;
 use Illuminate\Support\Facades\Session;
+use App\Comment;
 
 class AdminPostsController extends Controller
 {
@@ -71,7 +72,8 @@ class AdminPostsController extends Controller
     public function show($id)
     {
         $post = Post::findOrFail($id);
-        return view('post', compact('post'));
+        $comments = $post->comments()->whereIsActive(1)->get();
+        return view('post', compact('post', 'comments'));
     }
 
     /**

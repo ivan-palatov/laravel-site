@@ -30,6 +30,7 @@
             </div>
         @endif
 
+        {{-- Comment form --}}
         <div class="well">
             <h4>Leave a Comment:</h4>
             {!! Form::open(['method'=>'POST', 'action'=>'PostCommentsController@store']) !!}
@@ -44,7 +45,28 @@
         </div>
     @endif
 
+    @if (count($comments))
+        @foreach($comments as $comment)
+            <div class="media">
+                <a href="#" class="pull-left">
+                    <img height="64" src="/images/{{ $comment->photo }}" alt="User Photo" class="media-object">
+                </a>
+                <div class="media-body">
+                    <h4 class="media-heading">{{ $comment->author }}
+                        <small>{{ $comment->created_at->diffForHumans() }}</small>
+                    </h4>
+                    <p>{{ $comment->body }}</p>
+                </div>
+            </div>
+        @endforeach
+    @endif
+
+
+
 @endsection
+
+
+
 
 @section('categories')
     <div class="row">
