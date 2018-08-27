@@ -23,6 +23,7 @@
 
     {{-- Comments Section --}}
     @if(Auth::check())
+        {{-- Show notifications --}}
         @if (Session::has('notification'))
             <div class="alert alert-success alert-dismissable">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -44,18 +45,60 @@
             {!! Form::close() !!}
         </div>
     @endif
-
+    {{-- Show comments --}}
     @if (count($comments))
-        @foreach($comments as $comment)
+        @foreach ($comments as $comment)
             <div class="media">
                 <a href="#" class="pull-left">
-                    <img height="64" src="/images/{{ $comment->photo }}" alt="User Photo" class="media-object">
+                    <img 
+                        height="64" 
+                        src="/images/{{ $comment->photo }}" 
+                        alt="{{$comment->author}}'s Photo" 
+                        class="media-object">
                 </a>
                 <div class="media-body">
-                    <h4 class="media-heading">{{ $comment->author }}
+                    <h4 class="media-heading">
+                        {{ $comment->author }}
                         <small>{{ $comment->created_at->diffForHumans() }}</small>
                     </h4>
                     <p>{{ $comment->body }}</p>
+                    <hr>
+                    {{-- Comment replies --}}
+                    @if (count($comment->replies))
+                    @foreach ($comment->replies as $reply)
+                        <div class="media">
+                            <a href="#" class="pull-left">
+                                <img 
+                                    height="64" 
+                                    src="/images/{{ $reply->photo }}" 
+                                    alt="{{ $reply->author }}'s Photo" 
+                                    class="media-object">
+                            </a>
+                            <div class="media-body">
+                                <h4 class="media-heading">
+                                    {{ $reply->author }}
+                                    <small>{{ $reply->created_at->diffForHumans() }}</small>
+                                </h4>
+                                <p>{{ $reply->body }}</p>
+                            </div>
+                        </div>
+                        <br>
+                    @endforeach
+                    @endif
+
+                    {{-- Reply form --}}
+                    <div class="well">
+                        <h4>Reply:</h4>
+                        {!! Form::open(['method'=>'POST', 'action'=>'CommentRepliesController@store']) !!}
+                            <input type="hidden" name="comment_id" value="{{ $comment->id }}">
+                            <div class="form-group">
+                                {!! Form::textarea('body', null, ['class'=>'form-control', 'rows'=>2]) !!}
+                            </div>
+                            <div class="form-group">
+                                {!! Form::submit('Reply', ['class'=>'btn btn-primary pull-right']) !!}
+                            </div>
+                        {!! Form::close() !!}
+                    </div>
                 </div>
             </div>
         @endforeach

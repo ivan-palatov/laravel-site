@@ -8,7 +8,25 @@
     </div>
     @endif
     
-    <h1 class="text-center">All Replies</h1>
+    <h1 class="text-center">Replies for comment</h1>
+    <div class="media">
+        <a href="#" class="pull-left">
+            <img
+                height="64"
+                src="/images/{{ $replies[0]->comment->photo }}"
+                alt="{{$replies[0]->comment->author}}'s Photo"
+                class="media-object">
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading">
+                {{ $replies[0]->comment->author }}
+                <small>{{ $replies[0]->comment->created_at->diffForHumans() }}</small>
+            </h4>
+            <p>{{ $replies[0]->comment->body }}</p>
+        </div>
+    </div>
+    <hr>
+
     @if (count($replies))
         <table class="table">
             <thead>
@@ -17,7 +35,7 @@
                     <th>Author</th>
                     <th>Email</th>
                     <th>Reply</th>
-                    <th>Comment</th>
+                    <th>Post</th>
                     <th>Created</th>
                     <th>Controlls</th>
                 </tr>
@@ -30,7 +48,7 @@
                         <td>{{ $reply->email }}</td>
                         <td>{{ str_limit($reply->body, 15) }}</td>
                         <td>
-                            <a href="{{ route('home.comment', $reply->comment->id) }}">View</a>
+                            <a href="{{ route('home.post', $reply->comment->post_id) }}">View Post</a>
                         </td>
                         <td>{{ $reply->created_at->diffForHumans() }}</td>
                         <td>
@@ -54,7 +72,7 @@
             </tbody>
         </table>
     @else
-        <p class="text-center lead">There are no comments</p>
+        <p class="text-center lead">There are no replies for this comment</p>
     @endif
     
 @endsection

@@ -21,6 +21,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/post/{id}', ['as'=>'home.post', 'uses'=>'AdminPostsController@show']);
 
+Route::get('/comment/{id}', ['as'=>'home.comment', 'uses'=>'CommentRepliesController@show']);
+
 Route::group(['middleware' => ['admin']], function () {
     Route::resource('admin/users', 'AdminUsersController');
 
