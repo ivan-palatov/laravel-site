@@ -19,7 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/post/{id}', ['as'=>'home.post', 'uses'=>'AdminPostsController@show']);
+Route::get('/post/id/{id}', ['as'=>'home.post', 'uses'=>'AdminPostsController@show']);
+
+Route::get('/post/{slug}', ['as'=>'home.post.slug', 'uses'=>'AdminPostsController@post']);
 
 Route::get('/comment/{id}', ['as'=>'home.comment', 'uses'=>'CommentRepliesController@show']);
 

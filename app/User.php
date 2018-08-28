@@ -46,4 +46,12 @@ class User extends Authenticatable
     public function posts() {
         return $this->hasMany('App\Post');
     }
+
+    // Creating gravatar virtual field
+    // Could use it as a normal field e.g. $user->gravatar or Auth::user()->gravatar
+    public function getGravatarAttribute() {
+        $hash = md5(strtolower(trim($this->attributes['email']))) . '?d=mm';
+
+        return "http://www.gravatar.com/avatar/$hash";
+    }
 }
